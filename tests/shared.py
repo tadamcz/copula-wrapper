@@ -27,14 +27,6 @@ def is_frozen_beta(distribution):
 	return False
 
 
-def is_geometric_series(list):
-	common_ratio = list[1] / list[0]
-	for i in range(2, len(list)):
-		if list[i] / list[i - 1] != pytest.approx(common_ratio):
-			return False
-	return True
-
-
 @pytest.fixture(params=[-1, 0.5], ids=lambda p: f"mu_n={p}")
 def mu_norm(request):
 	return request.param
