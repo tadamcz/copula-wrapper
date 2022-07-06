@@ -1,17 +1,27 @@
-Sometimes, we may want to specify an `n`-dimensional continuous joint probability distribution by `n` marginal
-distributions, and a set of pairwise correlations between the
-dimensions. [Copulas](https://www.mathworks.com/help/stats/copulas-generate-correlated-samples.html) are a good way to
-achieve this.
+Suppose we want to specify a continuous `n`-dimensional joint probability distribution by giving:
+
+- `n` marginal distributions
+- a set of pairwise correlations between the dimensions
+
+[Copulas](https://www.mathworks.com/help/stats/copulas-generate-correlated-samples.html) are a good way to achieve this.
+
+This is a wrapper around the copula functionality in the [`statsmodels` package](https://www.statsmodels.org/).
 
 # Interface
 
-The [`statsmodels` package](https://www.statsmodels.org/) has a good set of functionality related to copulas, found
+The `statsmodels` package has a good set of functionality related to copulas, found
 in `statsmodels.distributions.copula`. However, for my purposes, I found the `statsmodels` interface unintuitive.
 
-I created this wrapper around `statsmodels`, which abstracts away copula-related considerations, and simply takes in (1)
-the marginal distributions, and (2) optional rank correlations, while offering a standard SciPy probability distribution
-interface (full SciPy compatibility is a work in progress, see TODO in code). It currently only supports the Gaussian
-copula.
+This wrapper abstracts away copula-related considerations:
+
+* It takes as inputs:
+    * the marginal distributions (as SciPy continuous distributions objects)
+    * optional [rank correlations](https://en.wikipedia.org/wiki/Rank_correlation) (note, this is not the traditional [Pearson's correlation](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)).
+* It offers a standard SciPy distribution interface (full SciPy compatibility is a work in progress, see TODO in code).
+
+The wrapper currently only supports the Gaussian copula.
+
+For more detail, see docstrings.
 
 # Tests
 
@@ -23,8 +33,8 @@ joint distribution have:
 1. The expected rank correlation matrix
 2. The expected marginal distributions (using the Kolmogorov-Smirnov statistic)
 
-If you have multiple cores, it's recommended that you run tests in parallel with `pytest -n <x>` (where `x` is the
-number of processes) or `pytest -n auto`.
+The tests are parametrized (run for many inputs). If you have multiple cores, it's recommended that you run tests in
+parallel with `pytest -n <x>` (where `x` is the number of processes) or `pytest -n auto`.
 
 # Usage
 
