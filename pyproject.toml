@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "copwrp"
+name = "copula-wrapper"
 version = "0.0.1"
 description = ""
 authors = ["tadamcz <tmkadamcz@gmail.com>"]
