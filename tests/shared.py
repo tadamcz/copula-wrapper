@@ -75,7 +75,7 @@ def rank_corr(request):
 	return request.param
 
 
-@pytest.fixture(params=['spearmans_rho', 'kendalls_tau'], ids=lambda p: f"method={p}")
+@pytest.fixture(params=['spearman', 'kendall'], ids=lambda p: f"method={p}")
 def rank_corr_method(request):
 	return request.param
 

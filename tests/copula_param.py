@@ -3,7 +3,7 @@ import pytest
 from copula_wrapper import correlation_convert
 
 
-@pytest.fixture(params=['spearmans_rho', 'kendalls_tau'], ids=lambda p: f"method={p}")
+@pytest.fixture(params=['spearman', 'kendall'], ids=lambda p: f"method={p}")
 def corr_method(request):
 	return request.param
 
@@ -14,8 +14,8 @@ def extremes_corr(request):
 
 
 def test_extremes(corr_method, extremes_corr):
-	if corr_method == 'kendalls_tau':
-		assert correlation_convert.pearsons_rho(kendalls_tau=extremes_corr) == pytest.approx(extremes_corr)
+	if corr_method == 'kendall':
+		assert correlation_convert.pearsons_rho(kendall=extremes_corr) == pytest.approx(extremes_corr)
 
-	if corr_method == 'spearmans_rho':
-		assert correlation_convert.pearsons_rho(spearmans_rho=extremes_corr) == pytest.approx(extremes_corr)
+	if corr_method == 'spearman':
+		assert correlation_convert.pearsons_rho(spearman=extremes_corr) == pytest.approx(extremes_corr)

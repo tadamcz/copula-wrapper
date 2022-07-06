@@ -3,7 +3,7 @@ Suppose we want to specify a continuous `n`-dimensional joint probability distri
 - `n` marginal distributions
 - a set of pairwise correlations between the dimensions
 
-[Copulas](https://www.mathworks.com/help/stats/copulas-generate-correlated-samples.html) are a good way to achieve this.
+[Copulas](https://www.mathworks.com/help/stats/copulas-generate-correlated-samples.html) are a good way to achieve this separate specification of dependence and marginal distribution.
 
 This is a wrapper around the copula functionality in the [`statsmodels` package](https://www.statsmodels.org/).
 
@@ -53,7 +53,7 @@ pairwise_rank_corr = {
 	("risk_of_war", "market_return"): -0.1,
 }
 
-dist = JointDistribution(marginals, pairwise_rank_corr, rank_corr_method="kendalls_tau")
+dist = JointDistribution(marginals, pairwise_rank_corr, rank_corr_method="kendall")
 
 # Query the CDF or PDF
 p = dist.cdf(

@@ -34,7 +34,7 @@ class JointDistribution(scipy.stats.rv_continuous):
 		:param rank_corr: Dictionary of pairwise rank correlations. Missing pairs are
 		assumed to be independent.
 
-		:param rank_corr_method: 'spearmans_rho' or 'kendalls_tau'
+		:param rank_corr_method: 'spearman' for Spearman's rho, or 'kendall' for Kendall's tau.
 		"""
 		super().__init__()
 		self.marginals = marginals
@@ -49,12 +49,12 @@ class JointDistribution(scipy.stats.rv_continuous):
 
 		rank_corr_matrix = self._to_matrix(rank_corr)
 
-		if rank_corr_method == 'spearmans_rho':
-			pearsons_rho = correlation_convert.pearsons_rho(spearmans_rho=rank_corr_matrix)
-		elif rank_corr_method == 'kendalls_tau':
-			pearsons_rho = correlation_convert.pearsons_rho(kendalls_tau=rank_corr_matrix)
+		if rank_corr_method == 'spearman':
+			pearsons_rho = correlation_convert.pearsons_rho(spearman=rank_corr_matrix)
+		elif rank_corr_method == 'kendall':
+			pearsons_rho = correlation_convert.pearsons_rho(kendall=rank_corr_matrix)
 		else:
-			raise ValueError("`rank_corr_method` must be one of 'spearmans_rho' or 'kendalls_tau'")
+			raise ValueError("`rank_corr_method` must be one of 'spearman' or 'kendall'")
 
 		# `pearsons_rho` refers to the correlations of the Gaussian-transformed variables
 		copula_instance = GaussianCopula(corr=pearsons_rho)

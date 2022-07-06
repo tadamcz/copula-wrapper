@@ -16,19 +16,11 @@ def test_rank_correlation(joint_sample, rank_corr, rank_corr_method):
 
 
 def rank_correlation_helper(joint_sample, corr, rank_correlation_method, rel, abs):
-	sample_corr = joint_sample.corr(method=method_pandas(rank_correlation_method))
+	sample_corr = joint_sample.corr(method=rank_correlation_method)
 
 	for key, value in corr.items():
 		left, right = key
 		assert sample_corr[left][right] == pytest.approx(value, rel=rel, abs=abs)
-
-
-def method_pandas(method):
-	# todo: remove this and the associated application code. better to follow the convention set down by pandas.
-	if method == 'spearmans_rho':
-		return 'spearman'
-	elif method == 'kendalls_tau':
-		return 'kendall'
 
 
 def to_corr_dict(dataframe):
@@ -50,7 +42,7 @@ def random_rank_correlation(marginals, rank_correlation_method):
 	sample_2 = scipy.stats.multivariate_normal(cov=random_pearson_rho).rvs(100)
 	samples_avg = sample_1 + sample_2
 	samples_avg = pd.DataFrame(samples_avg, columns=marginals.keys())
-	r = pd.DataFrame(samples_avg).corr(method=method_pandas(rank_correlation_method))
+	r = pd.DataFrame(samples_avg).corr(method=rank_correlation_method)
 	r = to_corr_dict(r)
 	return r
 
