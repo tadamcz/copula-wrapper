@@ -17,7 +17,7 @@ This wrapper abstracts away copula-related considerations:
 * It takes as inputs:
     * the marginal distributions (as SciPy continuous distributions objects)
     * optional [rank correlations](https://en.wikipedia.org/wiki/Rank_correlation) (note, this is not the traditional [Pearson's correlation](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)).
-* It offers a standard SciPy distribution interface (full SciPy compatibility is a work in progress, see TODO in code).
+* It offers a standard SciPy distribution interface (full SciPy compatibility is a work in progress, see TODO in code, PR welcome).
 
 The wrapper currently only supports the Gaussian copula.
 
