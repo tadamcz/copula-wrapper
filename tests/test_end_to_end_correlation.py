@@ -1,14 +1,11 @@
 import itertools
-import string
 
+import numpy as np
 import pandas as pd
 import pytest
+import scipy
 import scipy.linalg
 from scipy import stats
-
-from copula_wrapper import JointDistribution
-from tests.shared import rand_corr_onion
-from tests.test_end_to_end_marginals import kolmogorov_smirnov_helper
 
 
 def test_rank_correlation(joint_sample, rank_corr, rank_corr_method):
@@ -47,23 +44,35 @@ def random_rank_correlation(marginals, rank_correlation_method):
 	return r
 
 
-def test_many_dimensions(rank_corr_method):
-	marginals = [
-		stats.norm(0, 1),
-		stats.lognorm(1, 1),
-		stats.cauchy(0, 1),
-		stats.gamma(1, 2),
-		stats.beta(2, 2),
-		stats.uniform(0, 5),
-		stats.expon(1),
-		stats.chi2(1),
-	]
-	alphabet = string.ascii_lowercase
-	marginals = {alphabet[i]: v for i, v in enumerate(marginals)}
+def rand_corr_onion(size):
+	"""
+	Adapted from Tamaghna Roy:
+	https://github.com/tamaghnaroy/RandomCorrMat/blob/master/RandomCorrMat/RandomCorr.py
 
-	rank_correlation = random_rank_correlation(marginals, rank_corr_method)
+	This algorithm samples exactly and very quickly from a uniform distribution over the space of correlation matrices.
+	The idea here is to build the correlation matrix recursively
+		Corr(dimension=d) = [Corr(dimension=d-1) q; q 1]
+	q is chosen by the algorithm to ensure that it is a valid correlation matrix
 
-	dist = JointDistribution(marginals=marginals, rank_corr=rank_correlation, rank_corr_method=rank_corr_method)
-	joint_sample = dist.rvs(1_000_000)
-	rank_correlation_helper(joint_sample, rank_correlation, rank_corr_method, rel=1 / 100, abs=1 / 100)
-	kolmogorov_smirnov_helper(joint_sample, marginals, tol=1 / 100)
+	original paper: https://people.orie.cornell.edu/shane/pubs/NORTAHighD.pdf
+
+	matlab code: https://stats.stackexchange.com/questions/2746/how-to-efficiently-generate-random-positive-semidefinite-correlation-matrices/125017#125017
+
+	@param size: size of the correlation matrix
+	@return: correlation matrix (size x size)
+	"""
+	S = [[1]]
+	for i in range(1, size):
+		k = i + 1
+		if k == size:
+			y = np.random.uniform(0, 1)
+		else:
+			y = np.random.beta((k - 1) / 2, (size - k) / 2)
+		r = np.sqrt(y)
+		theta = np.random.randn(k - 1, 1)
+		theta = theta / np.sqrt(np.dot(theta.T, theta))
+		w = r * theta
+		R = scipy.linalg.sqrtm(S)
+		q = np.dot(R, w)
+		S = np.vstack((np.hstack((S, q)), np.hstack((q.T, [[1]]))))
+	return S

@@ -36,6 +36,8 @@ joint distribution have:
 The tests are parametrized (run for many inputs). If you have multiple cores, it's recommended that you run tests in
 parallel with `pytest -n <x>` (where `x` is the number of processes) or `pytest -n auto`.
 
+(There is also one very simple unit test for the transformation of correlations).
+
 # Usage
 
 ```python
