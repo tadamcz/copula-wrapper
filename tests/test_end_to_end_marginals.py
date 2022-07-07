@@ -1,15 +1,15 @@
 import numpy as np
 from scipy import stats
 
-from tests import shared
+import tests.shared
 
 
 def test_domain(joint_sample, marginals):
 	for name, marginal in marginals.items():
 		data = joint_sample[name]
-		if shared.is_frozen_lognormal(marginal):
+		if tests.shared.is_frozen_lognormal(marginal):
 			assert np.all(data > 0)
-		if shared.is_frozen_beta(marginal):
+		if tests.shared.is_frozen_beta(marginal):
 			assert np.all(0 < data) and np.all(data < 1)
 
 
