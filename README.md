@@ -3,7 +3,7 @@ Suppose we want to specify a continuous `n`-dimensional joint probability distri
 - `n` marginal distributions
 - a set of pairwise correlations between the dimensions
 
-[Copulas](https://www.mathworks.com/help/stats/copulas-generate-correlated-samples.html) are a good way to achieve this separate specification of dependence and marginal distribution.
+[Copulas](https://www.mathworks.com/help/stats/copulas-generate-correlated-samples.html) are a good way to achieve this separate specification of marginal distribution and dependence.
 
 This is a wrapper around the copula functionality in the [`statsmodels` package](https://www.statsmodels.org/).
 
@@ -15,7 +15,7 @@ in `statsmodels.distributions.copula`. However, for my purposes, I found the `st
 This wrapper abstracts away copula-related considerations:
 
 * It takes as inputs:
-    * the marginal distributions (as SciPy continuous distributions objects)
+    * the marginal distributions (as SciPy continuous distribution objects)
     * optional [rank correlations](https://en.wikipedia.org/wiki/Rank_correlation) (note, this is not the traditional [Pearson's correlation](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)).
 * It offers a standard SciPy distribution interface (full SciPy compatibility is a work in progress, see TODO in code, PR welcome).
 
