@@ -24,6 +24,7 @@ class JointDistribution(scipy.stats.rv_continuous):
 		methods that should work, like .ppf. This is because you're supposed to override the underscored methods ._pdf,
 		._cdf, etc., instead of the methods .pdf, .cdf, etc. I haven't yet figured out how override these well for an
 		n-dimensional distribution.
+		- allow user to provide numbers instead of distributions for a dimension that have no uncertainty
 	"""
 
 	def __init__(self, marginals, rank_corr, rank_corr_method):
