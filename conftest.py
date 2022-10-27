@@ -18,6 +18,7 @@ def random_seed(request):
 	"""
 	autouse:
 	this fixture will be used by every test, even if not explicitly requested.
+	# TODO: remove autouse=True, some tests do not need this fixture, and it's very wasteful!
 
 	params:
 	this fixture will be run once for each element in params

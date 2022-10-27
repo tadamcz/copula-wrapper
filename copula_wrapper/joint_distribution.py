@@ -39,6 +39,7 @@ class JointDistribution(scipy.stats.rv_continuous):
 		"""
 		super().__init__()
 		self.marginals = marginals
+		self.validate_corr(rank_corr)
 		self.rank_correlation = rank_corr
 		self.rank_correlation_method = rank_corr_method
 
@@ -99,3 +100,14 @@ class JointDistribution(scipy.stats.rv_continuous):
 			corr_matrix[i][j] = correlation
 			corr_matrix[j][i] = correlation
 		return corr_matrix
+
+	def validate_corr(self, pairwise_corr):
+		for pair in pairwise_corr:
+			left, right = pair
+			left_right = pairwise_corr[(left, right)]
+			try:
+				right_left = pairwise_corr[(right, left)]
+			except KeyError:
+				continue
+			if right_left != left_right:
+				raise ValueError(f"Inconsistent rank correlations: {left,right}={left_right} and {right,left}={right_left}")
