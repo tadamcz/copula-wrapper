@@ -1,7 +1,9 @@
 import numpy as np
+from nonstd.distributions import FrozenCertainty
 from scipy import stats
 
 import tests.shared
+from copula_wrapper import JointDistribution
 
 
 def test_domain(joint_sample, marginals):
@@ -30,3 +32,20 @@ def kolmogorov_smirnov_helper(joint_sample, marginals, tol):
 		data = data[:subsample_n]
 		ks_statistic = stats.kstest(data, marginal.cdf).statistic
 		assert ks_statistic < tol
+
+
+def test_certainty(rank_corr_method):
+	VALUE = 1.23
+	marginals = {
+		"n": stats.norm(1, 1),
+		"b": stats.beta(2, 3),
+		"certainty": FrozenCertainty(VALUE),
+	}
+	rank_corr = {("n", "certainty"): 0.42}
+	jd = JointDistribution(marginals, rank_corr, rank_corr_method)
+	joint_sample = jd.rvs(nobs=1_000_000)
+
+	assert np.all(joint_sample["certainty"] == VALUE)
+
+	del marginals["certainty"]  # This won't work with Kolmogorov-Smirnov
+	kolmogorov_smirnov_helper(joint_sample, marginals, tol=1 / 500)

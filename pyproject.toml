@@ -14,6 +14,7 @@ statsmodels = "^0.13.2"
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
 pytest-xdist = "^2.5.0"
+nonstd = { git = "https://github.com/tadamcz/nonstd", rev = "d0066c13ef3d401817a75e681276348ebb657c7a" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
