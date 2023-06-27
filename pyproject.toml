@@ -1,8 +1,20 @@
+[tool]
 [tool.poetry]
-name = "copula-wrapper"
-version = "0.0.1"
-description = ""
-authors = ["tadamcz <tmkadamcz@gmail.com>"]
+name = "copula_wrapper"
+version = "0.1.0"
+homepage = "https://github.com/tadamcz/copula-wrapper"
+description = "Top-level package for statsmodels copula wrapper."
+authors = ["Tom Adamczewski <tadamczewskipublic@gmail.com>"]
+readme = "README.md"
+classifiers=[
+    'Natural Language :: English',
+    'Programming Language :: Python :: 3',
+]
+packages = [
+    { include = "copula_wrapper" },
+    { include = "tests", format = "sdist" },
+]
+
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.11"
@@ -11,12 +23,25 @@ numpy = "^1.23.0"
 pandas = "^1.4.3"
 statsmodels = "^0.13.2"
 
-[tool.poetry.dev-dependencies]
-pytest = "^7.1.2"
+[tool.poetry.group.dev.dependencies]
+bump2version = "*"
+coverage = "*"
+pytest = ">=7.2.0"
+pytest-pycharm = "*"
 pytest-xdist = "^2.5.0"
 nonstd = { git = "https://github.com/tadamcz/nonstd", rev = "d0066c13ef3d401817a75e681276348ebb657c7a" }
 
+black = {extras = ["d"], version = "*"}
+
+
+[tool.black]
+line-length = 100
+
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
 
