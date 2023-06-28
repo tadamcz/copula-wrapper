@@ -17,8 +17,8 @@ packages = [
 
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.11"
-scipy = "^1.8.1"
+python = ">=3.9,<3.13"
+scipy = "^1.11.0"
 numpy = "^1.23.0"
 pandas = "^1.4.3"
 statsmodels = "^0.13.2"
@@ -29,9 +29,12 @@ coverage = "*"
 pytest = ">=7.2.0"
 pytest-pycharm = "*"
 pytest-xdist = "^2.5.0"
-nonstd = { git = "https://github.com/tadamcz/nonstd", rev = "d0066c13ef3d401817a75e681276348ebb657c7a" }
-
+rvtools = "^0.1.2"
 black = {extras = ["d"], version = "*"}
+matplotlib = "^3.7.1"
+mkcodes = "^0.1.1"
+seaborn = "^0.11.2"
+vulture = "^2.7"
 
 
 [tool.black]
