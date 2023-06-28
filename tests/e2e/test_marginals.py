@@ -1,5 +1,5 @@
 import numpy as np
-from nonstd.distributions import FrozenCertainty
+from rvtools import certainty
 from scipy import stats
 
 import tests.shared
@@ -30,7 +30,7 @@ def test_certainty(rank_corr_measure):
     marginals = {
         "n": stats.norm(1, 1),
         "b": stats.beta(2, 3),
-        "certainty": FrozenCertainty(VALUE),
+        "certainty": certainty(VALUE),
     }
     rank_corr = {("n", "certainty"): 0.42}
     jd = CopulaJoint(marginals, **{rank_corr_measure: rank_corr})
