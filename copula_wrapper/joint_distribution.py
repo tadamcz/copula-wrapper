@@ -33,11 +33,24 @@ class CopulaJoint:
         *,
         spearman_rho: dict[tuple[Any, Any], float] | np.ndarray | float | None = None,
         kendall_tau: dict[tuple[Any, Any], float] | np.ndarray | float | None = None,
+        allow_singular: bool = False,
     ):
         """
-        :param marginals: A dictionary mapping names to marginal distributions, or a list of marginal distributions.
-        :param spearman_rho: A dictionary mapping pairs of names to Spearman's rho rank correlation coefficients, or a matrix of rank correlations.
-        :param kendall_tau: A dictionary mapping pairs of names to Kendall's tau rank correlation coefficients, or a matrix of rank correlations.
+        :param marginals:
+            A dictionary mapping names to marginal distributions, or a list of marginal distributions.
+
+        :param spearman_rho:
+            A dictionary mapping pairs of names to Spearman's rho rank correlation coefficients,
+            or a matrix of rank correlations.
+
+        :param kendall_tau:
+            A dictionary mapping pairs of names to Kendall's tau rank correlation coefficients,
+            or a matrix of rank correlations.
+
+        :param allow_singular:
+            Whether to allow singular rank correlation matrices. The behavior when the correlation
+            matrix is singular is determined by  ``scipy.stats.multivariate_normal`` and might not
+            be appropriate for all methods. Behavior might change in future versions.
 
         Provide exactly one of ``spearman_rho`` or ``kendall_tau``.
         All marginal distributions must be frozen, i.e. have their parameters specified.
@@ -68,7 +81,7 @@ class CopulaJoint:
         else:
             raise ValueError(f"Must provide exactly one of `spearman_rho` or `kendall_tau`.")
 
-        copula = CopulaClass(copula_corr)
+        copula = CopulaClass(copula_corr, allow_singular=allow_singular)
         self._wrapped = CopulaDistribution(copula, marginals)
 
     def rvs(self, size=1, random_state=None):

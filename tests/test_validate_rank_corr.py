@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 from scipy import stats
 
@@ -46,3 +47,20 @@ def test_not_positive_semidefinite(rank_corr_measure):
     }
     with pytest.raises(ValueError, match="positive semidefinite"):
         CopulaJoint(marginals, **{rank_corr_measure: rank_corr})
+
+
+@pytest.mark.parametrize("allow_singular", [True, False])
+def test_allow_singular(allow_singular):
+    marginals = {
+        "a": stats.uniform(0.75, 3),
+        "b": stats.uniform(0.75, 3),
+        "c": stats.norm(1, 1),
+    }
+    tau = {
+        ("a", "b"): 1,
+    }
+    if allow_singular:
+        joint = CopulaJoint(marginals, kendall_tau=tau, allow_singular=allow_singular)
+    else:
+        with pytest.raises(np.linalg.LinAlgError, match="positive definite"):
+            joint = CopulaJoint(marginals, kendall_tau=tau, allow_singular=allow_singular)
