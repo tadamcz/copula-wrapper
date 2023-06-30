@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "copula_wrapper"
-version = "0.1.2"
+version = "0.1.3"
 homepage = "https://github.com/tadamcz/copula-wrapper"
 description = "Top-level package for statsmodels copula wrapper."
 authors = ["Tom Adamczewski <tadamczewskipublic@gmail.com>"]
