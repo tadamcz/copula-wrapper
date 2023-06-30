@@ -11,7 +11,7 @@ from statsmodels.distributions.copula.copulas import CopulaDistribution
 
 from copula_wrapper.correlation_convert import to_pearsons_rho
 
-
+# TODO: add example with list/matrix input
 class CopulaJoint:
     """
     Wrapper for ``CopulaDistribution`` from ``statsmodels``.
