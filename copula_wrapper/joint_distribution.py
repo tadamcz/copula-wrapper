@@ -11,10 +11,11 @@ from statsmodels.distributions.copula.copulas import CopulaDistribution
 
 from copula_wrapper.correlation_convert import to_pearsons_rho
 
-# TODO: add example with list/matrix input
+
 class CopulaJoint:
     """
-    Wrapper for ``CopulaDistribution`` from ``statsmodels``.
+    Wrapper for ``CopulaDistribution`` from ``statsmodels``. At the moment, only the Gaussian
+    copula is supported.
 
     The rank correlations that the joint distribution will satisfy must be specified as either
     Spearman's rho or Kendall's tau.
