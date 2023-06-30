@@ -9,5 +9,5 @@ def block(request):
     return request.param
 
 
-def test_docs_do_not_raise(block):
+def test(block):
     exec(block)

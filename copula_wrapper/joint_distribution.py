@@ -14,17 +14,71 @@ from copula_wrapper.correlation_convert import to_pearsons_rho
 
 class CopulaJoint:
     """
-    Wrapper for ``statsmodels.distributions.copula.copulas.CopulaDistribution``.
+    Wrapper for ``CopulaDistribution`` from ``statsmodels``.
+
+    :param marginals:
+        A dictionary mapping names to marginal distributions, or a list of marginal distributions.
+
+    :param spearman_rho:
+        A dictionary mapping pairs of names to Spearman's rho rank correlation coefficients,
+        or a matrix of such rank correlations.
+
+    :param kendall_tau:
+        A dictionary mapping pairs of names to Kendall's tau rank correlation coefficients,
+        or a matrix of such rank correlations.
+
+    :param allow_singular:
+        Whether to allow singular rank correlation matrices. The behavior when the correlation
+        matrix is singular is determined by  ``scipy.stats.multivariate_normal`` and might not
+        be appropriate for all methods. Behavior might change in future versions.
+
+    Provide exactly one of ``spearman_rho`` or ``kendall_tau``.
+
+    All marginal distributions must be frozen, i.e. have their parameters specified.
+
+    Dictionary keys may be any hashable object, not just strings.
+
+
+    Examples
+    --------
+
+    >>> from copula_wrapper import CopulaJoint
+    >>> from scipy import stats
+    >>>
+    >>> marginals = {
+    ...     "consumption elasticity": stats.uniform(0.75, 3),
+    ...     "market return": stats.lognorm(0.05, 0.05),
+    ...     "risk of war": stats.beta(1, 50)
+    ... }
+
+    Specify Kendall's tau (missing pairs are assumed to be independent):
+    >>> tau = {
+    ...     ("risk of war", "market return"): -0.5,
+    ... }
+
+    Define the joint distribution:
+    >>> dist = CopulaJoint(marginals, kendall_tau=tau)
+
+    Query ``cdf``, ``pdf`` or ``logpdf``:
+    >>> dist.cdf({
+    ...     "consumption elasticity": 1.5,
+    ...     "market return": 1.5,
+    ...     "risk of war": 0.5
+    ... })
+    0.24999999999998662
+
+    Draw random samples:
+    >>> sample = dist.rvs(10_000)
 
     Notes
     -----
-    It satisfies the same interface as other SciPy multivariate frozen distributions. There's
+    This class satisfies the same interface as other SciPy multivariate frozen distributions. There's
     no public class that they inherit from, whereas ``scipy.stats.distributions.rv_frozen`` has
-    some methods that do not make sense for multidimensional distributions, such as ``ppf``. So
-    I don't subclass anything.
+    some methods that do not make sense for multidimensional distributions, such as ``ppf``.
 
-    SciPy frozen multivariate distributions do inherit from ``scipy.stats._multivariate.multi_rv_frozen``,
-    but that class has only the method ``random_state``, which is almost pointless to subclass.
+    SciPy frozen multivariate distributions do inherit from the private
+    ``scipy.stats._multivariate.multi_rv_frozen``, but that class has only the method
+    ``random_state``, which is almost pointless to subclass. So I don't subclass anything.
     """
 
     def __init__(
@@ -35,27 +89,6 @@ class CopulaJoint:
         kendall_tau: dict[tuple[Any, Any], float] | np.ndarray | float | None = None,
         allow_singular: bool = False,
     ):
-        """
-        :param marginals:
-            A dictionary mapping names to marginal distributions, or a list of marginal distributions.
-
-        :param spearman_rho:
-            A dictionary mapping pairs of names to Spearman's rho rank correlation coefficients,
-            or a matrix of rank correlations.
-
-        :param kendall_tau:
-            A dictionary mapping pairs of names to Kendall's tau rank correlation coefficients,
-            or a matrix of rank correlations.
-
-        :param allow_singular:
-            Whether to allow singular rank correlation matrices. The behavior when the correlation
-            matrix is singular is determined by  ``scipy.stats.multivariate_normal`` and might not
-            be appropriate for all methods. Behavior might change in future versions.
-
-        Provide exactly one of ``spearman_rho`` or ``kendall_tau``.
-        All marginal distributions must be frozen, i.e. have their parameters specified.
-        Dictionary keys may be any hashable object, not just strings.
-        """
         self.marginals = marginals
         self.family = "Gaussian"
 
