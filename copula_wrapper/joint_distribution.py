@@ -119,8 +119,8 @@ class CopulaJoint:
 
     def rvs(self, size=1, random_state=None):
         array = self._wrapped.rvs(nobs=size, random_state=random_state)
-        if self.idx_to_name:
-            return pd.DataFrame(array, columns=self.idx_to_name)
+        if self._idx_to_name:
+            return pd.DataFrame(array, columns=self._idx_to_name)
         else:
             return array
 
@@ -142,13 +142,13 @@ class CopulaJoint:
         format expected by statsmodels.
         """
         if isinstance(x, dict):
-            if self.idx_to_name is None:
+            if self._idx_to_name is None:
                 raise ValueError(
                     "Cannot provide a dict argument when marginals were given as a list."
                 )
-            return [x[name] for name in self.name_to_idx]
+            return [x[name] for name in self._name_to_idx]
         elif isinstance(x, Sequence):
-            if self.idx_to_name is not None:
+            if self._idx_to_name is not None:
                 raise ValueError(
                     "Cannot provide an array argument when marginals were given as a dict."
                 )
@@ -165,10 +165,10 @@ class CopulaJoint:
         if n_dimensions < 2:
             raise ValueError("Must provide at least two marginals.")
 
-        got_named = self.idx_to_name is not None and isinstance(rank_corr, dict)
+        got_named = self._idx_to_name is not None and isinstance(rank_corr, dict)
         try:
             np.asarray(rank_corr)
-            got_positional = self.idx_to_name is None
+            got_positional = self._idx_to_name is None
         except TypeError:
             got_positional = False
         if not xor(got_named, got_positional):
@@ -193,7 +193,7 @@ class CopulaJoint:
         corr_matrix = np.eye(N=len(self.marginals))
         for pair, correlation in corr.items():
             left, right = pair
-            i, j = self.name_to_idx[left], self.name_to_idx[right]
+            i, j = self._name_to_idx[left], self._name_to_idx[right]
             corr_matrix[i][j] = correlation
             corr_matrix[j][i] = correlation
         return corr_matrix
@@ -218,7 +218,7 @@ class CopulaJoint:
                 )
 
     @property
-    def idx_to_name(self) -> list | None:
+    def _idx_to_name(self) -> list | None:
         try:
             # dicts are ordered in modern Pythons
             return list(self.marginals.keys())
@@ -226,7 +226,7 @@ class CopulaJoint:
             return None
 
     @property
-    def name_to_idx(self) -> dict | None:
+    def _name_to_idx(self) -> dict | None:
         try:
             # dicts are ordered in modern Pythons
             return {name: i for i, name in enumerate(self.marginals.keys())}
