@@ -52,14 +52,17 @@ class CopulaJoint:
     ... }
 
     Specify Kendall's tau (missing pairs are assumed to be independent):
+
     >>> tau = {
     ...     ("risk of war", "market return"): -0.5,
     ... }
 
     Define the joint distribution:
+
     >>> dist = CopulaJoint(marginals, kendall_tau=tau)
 
     Query ``cdf``, ``pdf`` or ``logpdf``:
+
     >>> dist.cdf({
     ...     "consumption elasticity": 1.5,
     ...     "market return": 1.5,
@@ -68,6 +71,7 @@ class CopulaJoint:
     0.24999999999998662
 
     Draw random samples:
+
     >>> sample = dist.rvs(10_000)
 
     Notes
