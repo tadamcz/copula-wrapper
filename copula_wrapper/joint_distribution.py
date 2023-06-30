@@ -1,6 +1,6 @@
 from numbers import Real
 from operator import xor
-from typing import Any, Sequence
+from typing import Any, Sequence, Union
 
 import numpy as np
 import pandas as pd
@@ -16,6 +16,15 @@ class CopulaJoint:
     """
     Wrapper for ``CopulaDistribution`` from ``statsmodels``.
 
+    The rank correlations that the joint distribution will satisfy must be specified as either
+    Spearman's rho or Kendall's tau.
+
+    Dimensions may be named by giving ``marginals`` and the rank correlations as dictionaries.
+    In this case, the PDF and CDF are queried by passing a dictionary of values.
+
+    Alternatively, dimensions can be denoted by their position, in which case ``marginals`` must
+    be a list and the rank correlations a matrix (``np.ndarray`` or sequence of sequences).
+
     :param marginals:
         A dictionary mapping names to marginal distributions, or a list of marginal distributions.
 
@@ -28,8 +37,8 @@ class CopulaJoint:
         or a matrix of such rank correlations.
 
     :param allow_singular:
-        Whether to allow singular rank correlation matrices. The behavior when the correlation
-        matrix is singular is determined by  ``scipy.stats.multivariate_normal`` and might not
+        Whether to allow singular rank correlations. The behavior when the correlations imply a
+        singular matrix is determined by  ``scipy.stats.multivariate_normal`` and might not
         be appropriate for all methods. Behavior might change in future versions.
 
     Provide exactly one of ``spearman_rho`` or ``kendall_tau``.
@@ -74,6 +83,25 @@ class CopulaJoint:
 
     >>> sample = dist.rvs(10_000)
 
+
+    The same thing with unnamed dimensions:
+
+    >>> marginals = [
+    ...     stats.uniform(0.75, 3),
+    ...     stats.lognorm(0.05, 0.05),
+    ...     stats.beta(1, 50)
+    ... ]
+    >>> tau = [
+    ...     [1, -0.5, 0],
+    ...     [-0.5, 1, 0],
+    ...     [0, 0, 1]
+    ... ]
+    >>> dist = CopulaJoint(marginals, kendall_tau=tau)
+    >>> dist.cdf([1.5, 1.5, 0.5])
+    0.24999999999999942
+    >>> sample = dist.rvs(10_000)
+
+
     Notes
     -----
     This class satisfies the same interface as other SciPy multivariate frozen distributions. There's
@@ -89,8 +117,12 @@ class CopulaJoint:
         self,
         marginals: dict[Any, rv_frozen] | list[rv_frozen],
         *,
-        spearman_rho: dict[tuple[Any, Any], float] | np.ndarray | None = None,
-        kendall_tau: dict[tuple[Any, Any], float] | np.ndarray | None = None,
+        spearman_rho: dict[tuple[Any, Any], float]
+        | Union[np.ndarray, Sequence[Sequence]]
+        | None = None,
+        kendall_tau: dict[tuple[Any, Any], float]
+        | Union[np.ndarray, Sequence[Sequence]]
+        | None = None,
         allow_singular: bool = False,
     ):
         self.marginals = marginals
