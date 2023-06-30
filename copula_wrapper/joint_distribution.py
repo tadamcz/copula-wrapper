@@ -89,8 +89,8 @@ class CopulaJoint:
         self,
         marginals: dict[Any, rv_frozen] | list[rv_frozen],
         *,
-        spearman_rho: dict[tuple[Any, Any], float] | np.ndarray | float | None = None,
-        kendall_tau: dict[tuple[Any, Any], float] | np.ndarray | float | None = None,
+        spearman_rho: dict[tuple[Any, Any], float] | np.ndarray | None = None,
+        kendall_tau: dict[tuple[Any, Any], float] | np.ndarray | None = None,
         allow_singular: bool = False,
     ):
         self.marginals = marginals
