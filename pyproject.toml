@@ -20,7 +20,7 @@ packages = [
 python = ">=3.9,<3.13"
 scipy = "^1.11.0"
 numpy = "^1.23.0"
-pandas = "^1.4.3"
+pandas = "^2.0.3"
 statsmodels = ">=0.14.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -33,7 +33,7 @@ rvtools = "^0.1.2"
 black = {extras = ["d"], version = "*"}
 matplotlib = "^3.7.1"
 mkcodes = "^0.1.1"
-seaborn = "^0.11.2"
+seaborn = "^0.12"
 vulture = "^2.7"
 
 

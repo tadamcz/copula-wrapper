@@ -1,5 +1,5 @@
 import numpy as np
-from rvtools import certainty
+from rvtools.construct import certainty
 from scipy import stats
 
 import tests.shared
