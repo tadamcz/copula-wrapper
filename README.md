@@ -60,12 +60,12 @@ import seaborn as sns
 
 marginals = [
     stats.uniform(0.75, 3),
-    stats.lognorm(1, 1),
-    stats.beta(1, 100)
+    stats.lognorm(0.05, 0.05),
+    stats.beta(1, 50)
 ]
 
 spearman = np.eye(3)
-spearman[1, 2] = spearman[2, 1] = -0.3
+spearman[1, 2] = spearman[2, 1] = -0.5
 
 # Instantiate the (frozen) joint distribution
 dist = CopulaJoint(marginals, spearman_rho=spearman)
